@@ -61,11 +61,16 @@
     <string name="sbc_name">Google Book Search</string>
     <string name="wifi_changing_network">Verbindung zum Netzwerk anfordern\u2026</string>
 
-	<string name="decode_successful_result_pre_text">Produkt Code gefunden: \n</string>
+	
 	<string name="title_section1">Scannen</string>
     <string name="title_section2">Suchen</string>
     <string name="title_section3">Hilfe</string>
     <string name="navigation_drawer_open">Open</string>
     <string name="navigation_drawer_close">Close</string>
 	
+    <string name="activity_result_view_article_barcode">Strichcode: </string>
+    <string name="activity_result_view_article_title">Produkt Name: </string>
+	<string name="activity_result_view_article_description">Beschreibungen: </string>
+    
+    
 </resources>

@@ -23,5 +23,8 @@
   	<string name="button_custom_product_search">Custom search</string>
 	<string name="msg_camera_framework_bug">Sorry, the Android camera encountered a problem. You may need to restart the device.</string>
   	
-	<string name="decode_successful_result_pre_text">Product code found: \n</string>
+	
+	<string name="activity_result_view_article_barcode">Barcode: </string>
+	<string name="activity_result_view_article_title">Product Name: </string>
+	<string name="activity_result_view_article_description">Description: </string>
 </resources>

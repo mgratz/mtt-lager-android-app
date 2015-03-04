@@ -8,6 +8,7 @@ import java.util.Map;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -35,11 +36,13 @@ import com.google.zxing.DecodeHintType;
 import com.google.zxing.Result;
 
 import de.mtt.lager.android.R;
+import de.mtt.lager.android.app.LagerApp;
 import de.mtt.lager.android.camera.CameraManager;
 import de.mtt.lager.android.decodes.DecodeFormatManager;
 import de.mtt.lager.android.decodes.DecodeHintManager;
 import de.mtt.lager.android.decodes.Intents;
 import de.mtt.lager.android.fragments.NavigationDrawerFragment;
+import de.mtt.lager.android.fragments.ResultDialogFragment;
 import de.mtt.lager.android.utils.Constants;
 import de.mtt.lager.android.views.ViewfinderView;
 
@@ -119,8 +122,6 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
 	 */
 	private CharSequence				mTitle;
 
-	private TextView	resultView;
-
 	private IntentSource	source;
 
 
@@ -173,19 +174,29 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
 	 * @param barcode   A greyscale bitmap of the camera data which was decoded.
 	 */
 	public void handleDecode(Result rawResult, Bitmap barcode, float scaleFactor) {
-		resultView.setText(getString(R.string.decode_successful_result_pre_text) + rawResult.getText());
-		resultView.setVisibility(View.VISIBLE);
-		handler.postDelayed(new Runnable() {
+		if(rawResult.getText()!=null){
+			LagerApp.getModule().getBackend().getArticleById(rawResult.getText());
+			DialogFragment fragment = (DialogFragment) getFragmentManager().findFragmentByTag("Dialog");
+			if(fragment!=null){
+				if(fragment.isVisible()){
+					fragment.dismiss();
+					fragment=null;
+				}
 
-			@Override
-			public void run() {
-				resetStatusView();
-				handler.sendEmptyMessage(R.id.restart_preview);
 			}
-		}, 2500);
+			fragment = ResultDialogFragment.newInstance(rawResult.getText());
+			fragment.show(getFragmentManager(), "Dialog");
+			handler.postDelayed(new Runnable() {
 
+				@Override
+				public void run() {
+					resetStatusView();
+					reset();
+
+				}
+			}, 500);
+		}
 	}
-
 	private void initCamera(SurfaceHolder surfaceHolder) {
 		if (surfaceHolder == null) {
 			throw new IllegalStateException("No SurfaceHolder provided");
@@ -240,18 +251,18 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
 		return super.onCreateOptionsMenu(menu);
 	}
 
-
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 	}
 
 
+
+
 	@Override
 	public void onNavigationDrawerItemSelected(int position) {
 		getFragmentManager();
 	}
-
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -265,8 +276,10 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
 		return super.onOptionsItemSelected(item);
 	}
 
+
 	@Override
 	protected void onPause() {
+
 		if (handler != null) {
 			handler.quitSynchronously();
 			handler = null;
@@ -279,6 +292,7 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
 		}
 		super.onPause();
 	}
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -293,8 +307,6 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
 		viewfinderView.setCameraManager(cameraManager);
 
 		statusView = (TextView) findViewById(R.id.status_view);
-
-		resultView = (TextView)findViewById(R.id.result_view);
 
 		decodeFormats = null;
 		characterSet = null;
@@ -388,6 +400,7 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
 
 		}
 	}
+
 	public void onSectionAttached(int number) {
 		switch (number) {
 		case 1:
@@ -401,10 +414,11 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
 			break;
 		}
 	}
-
+	private void reset(){
+		onPause();
+		onResume();
+	}
 	public void resetStatusView() {
-		resultView.setText("");
-		resultView.setVisibility(View.GONE);
 		statusView.setText(R.string.msg_default_status);
 		statusView.setVisibility(View.VISIBLE);
 		viewfinderView.setVisibility(View.VISIBLE);
@@ -417,6 +431,8 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
 		actionBar.setDisplayShowTitleEnabled(true);
 		actionBar.setTitle(mTitle);
 	}
+
+
 
 	@Override
 	public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {

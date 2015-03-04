@@ -11,7 +11,7 @@
          space available using match_parent in both dimensions.
     -->
 
-    <FrameLayout
+   <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
 
@@ -24,17 +24,8 @@
 			android:layout_gravity="center"
             android:id="@+id/viewfinder_view"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" />
-        
-		<TextView
-            android:id="@+id/result_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|center_horizontal"
-            android:background="@color/transparent"
-            android:textSize="@dimen/decode_result_text_size"
-            android:textColor="@color/status_text" />
-
+            android:layout_height="fill_parent" />  
+		
         <TextView
             android:id="@+id/status_view"
             android:layout_width="wrap_content"

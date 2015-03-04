@@ -5,13 +5,13 @@ package de.mtt.lager.android.backend;
 
 public class BackendResult {
 
-	private String description;
+	public String description;
 
-	private String id;
+	public String id;
 
-	private String pictureURL;
+	public String pictureURL;
 
-	private String title;
+	public String title;
 
 
 }

@@ -53,8 +53,8 @@ public class Backend {
 	public BackendRequest putArticle(Article article) {
 		JsonObject json = new JsonObject();
 
-		if(article.getId()!=null){
-			json.addProperty("id", article.getId().toString());
+		if(article.getOrderno()!=null){
+			json.addProperty("id", article.getOrderno());
 		}
 
 		if(article.getTitle()!=null){
